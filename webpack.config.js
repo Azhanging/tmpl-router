@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 //路径模块
 var path = require('path');
+var url = require('url');
 //压缩模块插件
 var uglifyjs = require('uglifyjs-webpack-plugin');
 //生成页面
@@ -16,9 +17,9 @@ module.exports = {
 	},
 	//出口
 	output: {
-		path: path.resolve(__dirname, './dist'),
+		path: path.join(__dirname, '/dist'),
 		filename: './js/[name].js',
-		publicPath: './dist', //公共打包的默认路径
+		publicPath: '/dist', //公共打包的默认路径
 		libraryTarget: 'umd',
 		umdNamedDefine: true,
 		library: "TmplRourt"
@@ -31,6 +32,9 @@ module.exports = {
 			use: [
 				'babel-loader?presets[]=es2015'
 			]
+		}, {
+			test: /\.html$/,
+			loader: 'html-loader'
 		}]
 	},
 	//loader模块文件解析
@@ -38,7 +42,7 @@ module.exports = {
 		moduleExtensions: ["-loader"]
 	},
 	//map文件生成
-	devtool: 'source-map',
+	//	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
 			tmpl-router.js v1.0.2
@@ -53,15 +57,20 @@ module.exports = {
 		}),
 		new HtmlWebpackPlugin({
 			title: 'tmpl-router',
-			filename: 't-router.html',
+			filename: '/html/new-page.html',
+			template: 'dist/html/page.html',
 			hash: true,
-			showErrors:true
+			showErrors: true,
+			inject: 'body'
 		})
 	],
 	//配置服务器
 	devServer: {
-		publicPath: "http://localhost",
+		publicPath: "/",
 		watchContentBase: true,
-		port: 8880
+		port: 8880,
+		open: true,
+		openPage: '/dist/html/new-page.html'
+
 	}
 }

@@ -9,8 +9,9 @@ export default function getTmpl(hash) {
 	const tmpl = this.constructor.tmpl;
 
 	const _this = this;
-
-	if((!this.router[hash]) || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return; //查看当前的路由模板是否加载回来了
+    
+    //查看当前的路由 模板是否加载回来了
+	if((!this.router[hash]) || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return; 
 
 	const tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
 

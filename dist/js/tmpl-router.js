@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl-router
- * 			time:Fri Aug 25 2017 17:19:22 GMT+0800 (中国标准时间)
+ * 			time:Sat Aug 26 2017 00:13:56 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "./dist";
+/******/ 	__webpack_require__.p = "/dist";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
@@ -372,7 +372,8 @@ function getTmpl(hash) {
 
 	var _this = this;
 
-	if (!this.router[hash] || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return; //查看当前的路由模板是否加载回来了
+	//查看当前的路由 模板是否加载回来了
+	if (!this.router[hash] || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return;
 
 	var tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
 
@@ -823,4 +824,3 @@ function setHashEvent() {
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=tmpl-router.js.map
