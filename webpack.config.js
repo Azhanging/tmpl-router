@@ -3,6 +3,8 @@ var webpack = require('webpack');
 var path = require('path');
 //压缩模块插件
 var uglifyjs = require('uglifyjs-webpack-plugin');
+//生成页面
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	//文件起始路径
@@ -10,16 +12,16 @@ module.exports = {
 	//入口
 	entry: {
 		'tmpl-router': './src/index.js',
-		'tmpl-router.min':'./src/index.js'
+		'tmpl-router.min': './src/index.js'
 	},
 	//出口
 	output: {
 		path: path.resolve(__dirname, './dist'),
 		filename: './js/[name].js',
-		publicPath: './dist',//公共打包的默认路径
-        libraryTarget: 'umd',
-        umdNamedDefine: true,
-        library: "TmplRourt"
+		publicPath: './dist', //公共打包的默认路径
+		libraryTarget: 'umd',
+		umdNamedDefine: true,
+		library: "TmplRourt"
 	},
 	//模块处理器
 	module: {
@@ -36,18 +38,24 @@ module.exports = {
 		moduleExtensions: ["-loader"]
 	},
 	//map文件生成
-	//	devtool: 'source-map',
+	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
 			tmpl-router.js v1.0.2
 			(c) 2016-2017 Blue
 			Released under the MIT License.
 			https://github.com/azhanging/tmpl-router
-
+			time:${new Date()}
 		`),
 		new uglifyjs({
 			mangle: true,
 			include: /\.min\.js$/
+		}),
+		new HtmlWebpackPlugin({
+			title: 'tmpl-router',
+			filename: 't-router.html',
+			hash: true,
+			showErrors:true
 		})
 	],
 	//配置服务器
