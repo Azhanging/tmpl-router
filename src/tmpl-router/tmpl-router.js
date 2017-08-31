@@ -62,7 +62,7 @@ class TmplRouter {
 
 	redirect(hash) {
 		hash = hash.replace('#', '');
-		var href = location.href.split('#');
+		const href = location.href.split('#');
 		if(hash === '/') {
 			location.href = href[0];
 		} else {
@@ -80,8 +80,8 @@ class TmplRouter {
 	query(searchs) {
 		const fn = this.constructor.fn;
 		if(!fn.isStr(searchs)) return {};
-		var query = {};
-		var search = searchs.split('&');
+		const query = {},
+			search = searchs.split('&');
 		fn.each(search, function(_search, index) {
 			var temp = _search.split('=');
 			if(temp.length !== 1) {
@@ -96,10 +96,9 @@ class TmplRouter {
 	/*获取|设置hash-url参数*/
 	search(el, search) {
 
-		const fn = this.constructor.fn;
-		
-		const tmpl = this.constructor.tmpl;
-		
+		const fn = this.constructor.fn,
+			tmpl = this.constructor.tmpl;
+
 		let path = '';
 
 		try {
@@ -126,8 +125,7 @@ class TmplRouter {
 		if(hash === undefined) {
 			hash = window.location.hash.replace('#', '');
 		}
-		var path = '';
-		path = hash.replace('#', '').split('?');
+		const path = hash.replace('#', '').split('?');
 		return path[0];
 	}
 

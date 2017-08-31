@@ -6,7 +6,7 @@ import {
 	setInstance,
 	setRouterLinkStatus,
 	setRouterAnchor,
-	keepLive,
+	setkeepLive,
 	setPaths,
 	setHashEvent
 } from './set';
@@ -21,6 +21,8 @@ export default function init(opts) {
 	this.constructor.tmplRouter = this;
 
 	this.config = fn.extend(fn.copy(config), opts);
+	
+	this.routerView = fn.getEl(this.config.routerView);
 
 	setRouter.call(this, this.config.router ? this.config.router : {});
 
@@ -32,7 +34,7 @@ export default function init(opts) {
 
 	setRouterAnchor.call(this, this.config.anchorTime); //设置路由的锚点形式
 
-	keepLive.call(this); //设置保持状态
+	setkeepLive.call(this); //设置保持状态
 
 	setPaths.call(this, this.router); //处理路由详情 
 

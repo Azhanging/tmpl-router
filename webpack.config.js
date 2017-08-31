@@ -42,7 +42,7 @@ module.exports = {
 		moduleExtensions: ["-loader"]
 	},
 	//map文件生成
-	//	devtool: 'source-map',
+	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
 			tmpl-router.js v1.0.2
@@ -52,6 +52,7 @@ module.exports = {
 			time:${new Date()}
 		`),
 		new uglifyjs({
+			sourceMap:true,
 			mangle: true,
 			include: /\.min\.js$/
 		}),

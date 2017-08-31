@@ -1,6 +1,6 @@
 //设置路由的路径
 export function setRouter(routers, path) {
-	
+
 	const fn = this.constructor.fn,
 		_path = (path ? path : '');
 
@@ -33,21 +33,29 @@ export function setRouterLinkStatus() {
 
 	const fn = this.constructor.fn;
 
+	const tmpl = this.constructor.tmpl;
+
 	this.changeRoutereStatus(true);
 
 	const routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
 
 	fn.each(routerBtns, (routerBtn, index) => {
 		fn.on(routerBtn, 'click', (event) => {
-			if(!this.routerStatus) event.preventDefault();
+			const path = tmpl.attr(routerBtn, 'href'),
+				hash = this.getHash(path);
+			if(!(this.lastRouter === hash)){				
+				//点击路由链接触发的钩子
+				fn.run(this.config.triggerRouter, this, [path, routerBtn]);
+			}
+			if(!this.routerStatus) {
+				event.preventDefault();
+			}
 		});
 	});
-
 }
 
 /*设置路由的锚点形式*/
 export function setRouterAnchor(time) {
-
 	const fn = this.constructor.fn,
 		tmpl = this.constructor.tmpl;
 
@@ -58,11 +66,10 @@ export function setRouterAnchor(time) {
 	//获取路由绑定的节点
 	tmpl.on(document, this.config.routerAnchor, 'click', (event, el) => {
 
-		const anchorId = tmpl.attr(el, 'tmpl-anchor');
+		const anchorId = tmpl.attr(el, this.config.routerAnchorAttr),
+			anchorEl = fn.getEl(anchorId);
 
-		const anchorEl = fn.getEl(anchorId);
-
-		let anchorOffsetTop = tmpl.attr(el, 'tmpl-anchor-top');
+		let anchorOffsetTop = tmpl.attr(el, this.config.routerAnchorTop);
 
 		anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
 
@@ -80,7 +87,7 @@ export function setRouterAnchor(time) {
 }
 
 /*设置保持状态*/
-export function keepLive() {
+export function setkeepLive() {
 	const fn = this.constructor.fn;
 	if(!this.config.keepLive) return;
 	fn.on(window, 'scroll', (event) => {
@@ -119,9 +126,9 @@ export function setPaths(routes) {
 
 //设置hash
 export function setHashEvent() {
-	
+
 	const tmpl = this.constructor.tmpl;
-	
+
 	if(!this.constructor.hasTmplRouter) {
 		//修改hash时触发修改
 		window.onhashchange = (event) => {
