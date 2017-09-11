@@ -19,6 +19,9 @@ export default function init(opts) {
 	
 	//把第一次的实例对象挂在到构造上
 	this.constructor.tmplRouter = this;
+	
+	//只有一次路由实例，挂载到tmpl上
+	this.constructor.tmpl.constructor.router = this;
 
 	this.config = fn.extend(fn.copy(config), opts);
 	

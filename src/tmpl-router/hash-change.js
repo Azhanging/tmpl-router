@@ -38,13 +38,11 @@ export default function protoHashChange() {
 /*hashChange的处理*/
 function hashChange(routerBtns, path) {
 
-	const fn = this.constructor.fn;
-
-	const tmpl = this.constructor.tmpl;
+	const fn = this.constructor.fn,
+		tmpl = this.constructor.tmpl,
+		hash = this.getHash(path);
 
 	let alinkEl = null;
-
-	const hash = this.getHash(path);
 
 	this.getTmpl(hash); //默认动态加载模块
 
@@ -101,13 +99,13 @@ function getPathAlias(path, el) {
 	const fn = this.constructor.fn,
 		hash = this.getHash(path),
 		alias = this.alias[hash];
-		
+
 	//别名触发钩子
 	if(this.router[hash]) {
 		fn.run(this.config.routerEnter, this, [path, el]);
 		fn.run(this.config.routerEntered, this, [path, el]);
 	}
-	
+
 	//如果别名存在别名，递归使用
 	if(this.alias[alias]) {
 		return getPathAlias.apply(this, [alias, el]);
@@ -134,7 +132,7 @@ function showTmplEl(hash) {
 		view = this.routerView;
 
 	view.appendChild(this.router[hash]['temp']); //更新view层
-	
+
 	fn.each(tmpl.children(view), (el, index) => { //保存view层节点
 		this.router[hash]['view'].push(el);
 	});
