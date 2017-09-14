@@ -11,11 +11,11 @@ export default function getTmpl(hash) {
 	const _this = this;
     
     //查看当前的路由 模板是否加载回来了
-	if((!this.router[hash]) || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return; 
+	if((!this.routes[hash]) || this.routes[hash]['view'].length > 0 || this.routes[hash]['temp'].childNodes.length > 0) return; 
 
-	const tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
+	const tmplUrl = this.routes[hash]['tmplUrl']; //获取请求的url
 
-	const tmplId = this.router[hash]['tmplId']; //获取静态模板的id
+	const tmplId = this.routes[hash]['tmplId']; //获取静态模板的id
 
 	/*动态模板*/
 	if(tmplUrl) {
@@ -24,8 +24,8 @@ export default function getTmpl(hash) {
 				async: false,
 				url: tmplUrl,
 				success: function(data) {
-					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-					filterTextNode.call(_this, _this.router[hash]['temp']);
+					_this.routes[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+					filterTextNode.call(_this, _this.routes[hash]['temp']);
 					_this.changeRoutereStatus(false);
 				},
 				error: function(data) {
@@ -37,8 +37,8 @@ export default function getTmpl(hash) {
 				async: false,
 				url: tmplUrl,
 				success: function(data) {
-					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-					filterTextNode.call(_this, _this.router[hash]['temp']);
+					_this.routes[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+					filterTextNode.call(_this, _this.routes[hash]['temp']);
 					_this.changeRoutereStatus(false);
 				},
 				error: function(data) {
@@ -48,9 +48,9 @@ export default function getTmpl(hash) {
 		}
 	} else if(tmplId) {
 		try {
-			this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
+			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
 		} catch(e) {
-			this.router[hash]['temp'].appendChild(tmpl.create(''));
+			this.routes[hash]['temp'].appendChild(tmpl.create(''));
 		}
 		this.changeRoutereStatus(true);
 	}

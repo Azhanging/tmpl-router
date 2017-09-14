@@ -42,7 +42,7 @@ class TmplRouter {
 		const fn = this.constructor.fn;
 		if(fn.isObj(routerOpts)) {
 			fn.each(routerOpts, (opt, key) => {
-				this.router[key] = opt;
+				this.routes[key] = opt;
 			});
 		}
 		//设置路由配置

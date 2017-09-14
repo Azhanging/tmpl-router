@@ -15,7 +15,7 @@ export default function init(opts) {
 
 	const fn = this.constructor.fn;
 	
-	this.router = {};
+	this.routes = {};
 	
 	//把第一次的实例对象挂在到构造上
 	this.constructor.tmplRouter = this;
@@ -27,7 +27,7 @@ export default function init(opts) {
 	
 	this.routerView = fn.getEl(this.config.routerView);
 
-	setRouter.call(this, this.config.router ? this.config.router : {});
+	setRouter.call(this, this.config.routes ? this.config.routes : {});
 
 	setInstance.call(this, 'methods'); //设置methods
 
@@ -39,7 +39,7 @@ export default function init(opts) {
 
 	setkeepLive.call(this); //设置保持状态
 
-	setPaths.call(this, this.router); //处理路由详情 
+	setPaths.call(this, this.routes); //处理路由详情 
 
 	setHashEvent.call(this); //设置hash
 

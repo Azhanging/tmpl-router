@@ -40,8 +40,6 @@
 
 * **tmplId:**这种的非异步模块，把对应模块script的id写在这个参数，id模块会自动处理routerStatus的状态，不需要设定
 
-* **routerStatus:**如果路由中不存在异步模块或者是静态的id模块，就需要设定这个值来作为状态告诉路由是允许做下一跳的；
-
 * **alias:**别名路径,如果访问的为别名路径，则跳转到对应的路由地址
 
 * **keepLive:**在实例中的keepLive设置为true的情况下，这里的keepLive才会生效，这里的keepLive是为了让部分view层保持状态使用的，false则不保持状态；
