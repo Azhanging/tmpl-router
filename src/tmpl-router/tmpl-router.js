@@ -9,7 +9,7 @@ import getTmpl from './get-tmpl';
  * 路由构造
  * 
  * */
-class TmplRouter {
+export default class TmplRouter {
 	constructor(opts) {
 		//如果已经实例化了一次，直接返回实例化的路由
 		if(this.constructor.hasTmplRouter) {
@@ -22,9 +22,7 @@ class TmplRouter {
 	static install(Tmpl) {
 
 		//检查是否安装过路由了
-		if(this.installed) {
-			return this;
-		}
+		if(this.installed) return this;
 
 		this.installed = true;
 
@@ -139,5 +137,3 @@ class TmplRouter {
 if(window.Tmpl && typeof Tmpl === 'function') {
 	TmplRouter.install(Tmpl);
 }
-
-export default TmplRouter;

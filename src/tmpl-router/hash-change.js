@@ -1,58 +1,68 @@
 /*
  *	路由中的hash方法处理
  * */
+
 export default function protoHashChange() {
 
-    const fn = this.constructor.fn;
+    const fn = this.constructor.fn,
+        path = window.location.hash.replace('#', ''),
+        routerBtns = fn.getEls(this.config.routerLink), //获取路由绑定的节点
+        lastRouter = this.$lastRouter;
 
-    const path = window.location.hash.replace('#', '');
-
-    let hash = this.getHash(path); //获取hash
-
-    const routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
-
-    let hasAlias = false; //是否有别名
+    let hash = this.getHash(path), //获取hash
+        hasAlias = false; //是否有别名
 
     if(hash === '') hash = '/'; //如果不存在hash设置为根目录
 
     //走别名路由
     if(this.alias[hash]) {
         hasAlias = true;
-        hash = getPathAlias.apply(this, [(hash === '/' ? hash : path), null]); //判断是不是别名的路由	
+        //判断是不是别名的路由
+        hash = getPathAlias.apply(this, [(hash === '/' ? hash : path), null]);
     }
 
-    if(routerBtns.length === 0) return this; //存在路由绑定
+    //存在路由绑定
+    if(routerBtns.length === 0) return this;
 
-    if(!this.alias[hash] && !this.routes[hash]) { //error页面
+    //error页面
+    if(!this.alias[hash] && !this.routes[hash]) {
         fn.run(this.config.error, this);
         return;
     }
 
-    /*路由进入的钩子*/
-    fn.run(this.config.routerEnter, this, [path]);
+    //使用路由中的钩子
+    fn.run(this.routes[hash].routerEnter, this, [path, this.$from]);
+
+    /*路由进入的全局钩子*/
+    fn.run(this.config.routerEnter, this, [path, this.$from]);
 
     /*如果是存在别名路径，返回代理的那个路径*/
-    hashChange.apply(this, [routerBtns, (hasAlias ? hash : path)]);
+    hashChange.apply(this, [routerBtns, (hasAlias ? hash : path), path]);
 }
 
 /*hashChange的处理*/
-function hashChange(routerBtns, path) {
+function hashChange(routerBtns, path, fullPath) {
 
     const fn = this.constructor.fn,
         tmpl = this.constructor.tmpl,
-        hash = this.getHash(path);
+        hash = this.getHash(path),
+        lastRouter = this.$lastRouter;
 
+    //记录被点击的router-link
     let alinkEl = null;
 
-    this.getTmpl(hash); //默认动态加载模块
+    //默认动态加载模块
+    this.getTmpl(hash);
 
     //是否存在最后一个路由地址
-    if(this.lastRouter) {
+    if(lastRouter) {
         /*如果不是匹配的路由视图，则不显示在路由视图中*/
-        hideTmplEl.call(this, this.lastRouter);
+        hideTmplEl.call(this, this.getHash(lastRouter));
+        this.$from = fullPath;
     }
 
-    this.lastRouter = hash; //记录最后的路由路径
+    //记录最后的路由路径
+    this.$lastRouter = path;
 
     showTmplEl.apply(this, [hash]); //显示路由的view
 
@@ -67,28 +77,25 @@ function hashChange(routerBtns, path) {
             alinkEl = el; //保存按钮节点
 
             tmpl.addClass(el, this.config.routerLinkActive); //修改路由link的样式
-
-            /*是否使用了保存之前的状态*/
-            if(this.config.keepLive && this.routes[href].keepLive) {
-                setScrollTop.call(this, this.routes[href].scrollTop);
-            } else {
-                setScrollTop.call(this, 0);
-            }
         } else {
             /*存在配置路由*/
-            if(this.routes[href]) {
-                hideTmplEl.call(this, href); //如果不是匹配的路由视图，则不显示在路由视图中
-            }
+            if(this.routes[href]) hideTmplEl.call(this, href); //如果不是匹配的路由视图，则不显示在路由视图中
+
             tmpl.removeClass(el, this.config.routerLinkActive);
         }
 
         /*如果设置的节点没有绑定到对应的节点上*/
-        if(!alinkEl) {
-            this.currentRouter = hash;
-        }
+        if(!alinkEl) this.currentRouter = hash;
     });
-    //调用钩子
-    fn.run(this.config.routerEntered, this, [path, alinkEl]);
+
+    //设置keeplive
+    setRouterScroll.call(this, hash);
+
+    //使用路由中的钩子
+    fn.run(this.routes[hash].routerEntered, this, [path, this.$from, alinkEl]);
+
+    //调用全局进入结束钩子
+    fn.run(this.config.routerEntered, this, [path, this.$from, alinkEl]);
 }
 
 /*检查当前路径是否存在别名*/
@@ -99,10 +106,12 @@ function getPathAlias(path, el) {
         alias = this.alias[hash];
 
     //别名触发钩子
-    if(this.routes[hash]) {
+    /*if(this.routes[hash]) {
+        fn.run(this.routes[hash].routerEnter, this, [path]);
         fn.run(this.config.routerEnter, this, [path, el]);
+        fn.run(this.routes[hash].routerEntered, this, [path]);
         fn.run(this.config.routerEntered, this, [path, el]);
-    }
+    }*/
 
     //如果别名存在别名，递归使用
     if(this.alias[alias]) {
@@ -129,11 +138,23 @@ function showTmplEl(hash) {
         tmpl = this.constructor.tmpl,
         view = this.routerView;
 
-    view.appendChild(this.routes[hash].temp); //更新view层
+    //更新view层
+    view.appendChild(this.routes[hash].temp);
 
-    fn.each(tmpl.children(view), (el, index) => { //保存view层节点
+    //保存view层节点
+    fn.each(tmpl.children(view), (el, index) => {
         this.routes[hash].view.push(el);
     });
+}
+
+//设置路由的scroll
+function setRouterScroll(hash) {
+    /*是否使用了保存之前的状态*/
+    if(this.config.keepLive && this.routes[hash].keepLive) {
+        setScrollTop.call(this, this.routes[hash].scrollTop);
+    } else {
+        setScrollTop.call(this, 0);
+    }
 }
 
 /*设置scrollTop*/

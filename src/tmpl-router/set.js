@@ -7,7 +7,7 @@ export function setRouter(routers, path) {
     fn.each(routers, (router, index) => {
         if(router.path === undefined) return;
         const __path = _path + router.path;
-        if(fn.isObj(router.modules)) {
+        if(fn.isArr(router.modules)) {
             setRouter.apply(this, [router.modules, __path]);
         }
         this.routes[__path] = router;
@@ -45,7 +45,7 @@ export function setRouterLinkStatus() {
         fn.on(routerBtn, 'click', (event) => {
             const path = tmpl.attr(routerBtn, 'href'),
                 hash = this.getHash(path);
-            if(!(this.lastRouter === hash)) {
+            if(!(this.getHash(this.$lastRouter) === hash)) {
                 //点击路由链接触发的钩子
                 fn.run(this.config.triggerRouter, this, [path, routerBtn]);
             }
@@ -95,8 +95,8 @@ export function setkeepLive() {
     const fn = this.constructor.fn;
     if(!this.config.keepLive) return;
     fn.on(window, 'scroll', (event) => {
-        if(this.routes[this.currentRouter] && this.routes[this.currentRouter]['keepLive']) {
-            this.routes[this.currentRouter]['scrollTop'] = document.body.scrollTop || document.documentElement.scrollTop;
+        if(this.routes[this.currentRouter] && this.routes[this.currentRouter].keepLive) {
+            this.routes[this.currentRouter].scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
         }
     });
 }
@@ -112,14 +112,14 @@ export function setPaths(routes) {
 
         const alias = router.alias;
 
-        this.routes[path]['view'] = []; //设置视图节点
+        this.routes[path].view = []; //设置视图节点
 
         //如果设置了全局的keepLive，就会默认设置保持节点为true,全局设定状态的时候是支持保持状态的
-        if(this.config.keepLive && this.routes[path]['keepLive'] === undefined) {
-            this.routes[path]['keepLive'] = true;
+        if(this.config.keepLive && this.routes[path].keepLive === undefined) {
+            this.routes[path].keepLive = true;
         }
 
-        this.routes[path]['temp'] = document.createDocumentFragment(); //设置临时存放节点
+        this.routes[path].temp = document.createDocumentFragment(); //设置临时存放节点
 
         //存在别名
         if(alias) {

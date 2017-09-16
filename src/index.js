@@ -1,4 +1,4 @@
-//Tmpl 文件入口
+//TmplRouter 文件入口
 import TmplRouter from './tmpl-router/tmpl-router';
 
 (function(global, factory) {
