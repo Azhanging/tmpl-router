@@ -13,7 +13,8 @@ import {
 //路由初始
 export default function init(opts) {
 
-	const fn = this.constructor.fn;
+	const fn = this.constructor.fn,
+	   tmpl = this.constructor.tmpl;
 	
 	this.routes = {};
 	
@@ -25,7 +26,7 @@ export default function init(opts) {
 
 	this.config = fn.extend(fn.copy(config), opts);
 	
-	this.routerView = fn.getEl(this.config.routerView);
+	this.routerView = tmpl.getEl(this.config.routerView);
 
 	setRouter.call(this, this.config.routes ? this.config.routes : {});
 

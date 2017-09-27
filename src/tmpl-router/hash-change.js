@@ -5,8 +5,9 @@
 export default function protoHashChange() {
 
     const fn = this.constructor.fn,
+        tmpl = this.constructor.tmpl,
         path = window.location.hash.replace('#', ''),
-        routerBtns = fn.getEls(this.config.routerLink), //获取路由绑定的节点
+        routerBtns = tmpl.getEls(this.config.routerLink), //获取路由绑定的节点
         lastRouter = this.$lastRouter;
 
     let hash = this.getHash(path), //获取hash

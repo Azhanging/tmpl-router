@@ -39,7 +39,7 @@ export function setRouterLinkStatus() {
 
     this.changeRoutereStatus(true);
 
-    const routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+    const routerBtns = tmpl.getEls(this.config.routerLink); //获取路由绑定的节点
 
     fn.each(routerBtns, (routerBtn, index) => {
         fn.on(routerBtn, 'click', (event) => {
@@ -71,7 +71,7 @@ export function setRouterAnchor(time) {
     tmpl.on(document, this.config.routerAnchor, 'click', (event, el) => {
 
         const anchorId = tmpl.attr(el, this.config.routerAnchorAttr),
-            anchorEl = fn.getEl(anchorId);
+            anchorEl = tmpl.getEl(anchorId);
 
         let anchorOffsetTop = tmpl.attr(el, this.config.routerAnchorTop);
 

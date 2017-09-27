@@ -48,7 +48,7 @@ export default function getTmpl(hash) {
 		}
 	} else if(tmplId) {
 		try {
-			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
+			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(tmpl.getEl(tmplId)))); //非动态模板	
 		} catch(e) {
 			this.routes[hash]['temp'].appendChild(tmpl.create(''));
 		}
