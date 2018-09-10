@@ -13,7 +13,7 @@ import {
 //路由初始
 export default function init(opts) {
 
-	const fn = this.constructor.fn,
+	const util = this.constructor.util,
 	   tmpl = this.constructor.tmpl;
 	
 	this.routes = {};
@@ -24,7 +24,7 @@ export default function init(opts) {
 	//只有一次路由实例，挂载到tmpl上
 	this.constructor.tmpl.constructor.router = this;
 
-	this.config = fn.extend(fn.copy(config), opts);
+	this.config = util.extend(util.deepCopy(config), opts);
 	
 	this.routerView = tmpl.getEl(this.config.routerView);
 
@@ -44,10 +44,10 @@ export default function init(opts) {
 
 	setHashEvent.call(this); //设置hash
 
-	fn.run(this.config.created, this); //所有创建后的钩子
+	util.run(this.config.created, this); //所有创建后的钩子
 
 	this.hashChange(); //初始化好了初始化hash
 
-	fn.run(this.config.mounted, this); //所有完毕后的钩子
+	util.run(this.config.mounted, this); //所有完毕后的钩子
 
 };

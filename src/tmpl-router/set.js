@@ -1,13 +1,13 @@
 //设置路由的路径
 export function setRouter(routers, path) {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         _path = (path ? path : '');
 
-    fn.each(routers, (router, index) => {
+    util.each(routers, (router, index) => {
         if(router.path === undefined) return;
         const __path = _path + router.path;
-        if(fn.isArr(router.modules)) {
+        if(util.isArray(router.modules)) {
             setRouter.apply(this, [router.modules, __path]);
         }
         this.routes[__path] = router;
@@ -18,14 +18,14 @@ export function setRouter(routers, path) {
 //设置data和methods方法
 export function setInstance(type) {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         get = this.config[type];
 
-    if(!fn.isObj(get)) {
+    if(!util.isObjcet(get)) {
         return;
     }
 
-    fn.each(get, (_get, key) => {
+    util.each(get, (_get, key) => {
         this[key] = _get;
     });
 }
@@ -33,7 +33,7 @@ export function setInstance(type) {
 /*设置路由的状态是够允许跳转*/
 export function setRouterLinkStatus() {
 
-    const fn = this.constructor.fn;
+    const util = this.constructor.util;
 
     const tmpl = this.constructor.tmpl;
 
@@ -41,13 +41,13 @@ export function setRouterLinkStatus() {
 
     const routerBtns = tmpl.getEls(this.config.routerLink); //获取路由绑定的节点
 
-    fn.each(routerBtns, (routerBtn, index) => {
-        fn.on(routerBtn, 'click', (event) => {
+    util.each(routerBtns, (routerBtn, index) => {
+        util.on(routerBtn, 'click', (event) => {
             const path = tmpl.attr(routerBtn, 'href'),
                 hash = this.getHash(path);
             if(!(this.getHash(this.$lastRouter) === hash)) {
                 //点击路由链接触发的钩子
-                fn.run(this.config.triggerRouter, this, [path, routerBtn]);
+                util.run(this.config.triggerRouter, this, [path, routerBtn]);
             }
             if(!this.routerStatus) {
                 event.preventDefault();
@@ -60,7 +60,7 @@ export function setRouterLinkStatus() {
 
 /*设置路由的锚点形式*/
 export function setRouterAnchor(time) {
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         tmpl = this.constructor.tmpl;
 
     function stopScroll(event) {
@@ -75,9 +75,9 @@ export function setRouterAnchor(time) {
 
         let anchorOffsetTop = tmpl.attr(el, this.config.routerAnchorTop);
 
-        anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
+        anchorOffsetTop = util.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
 
-        if(fn.isEl(anchorEl)) {
+        if(util.isEl(anchorEl)) {
             //定义滑动阻止默认动作
             window.addEventListener('mousewheel', stopScroll);
 
@@ -92,9 +92,9 @@ export function setRouterAnchor(time) {
 
 /*设置保持状态*/
 export function setkeepLive() {
-    const fn = this.constructor.fn;
+    const util = this.constructor.util;
     if(!this.config.keepLive) return;
-    fn.on(window, 'scroll', (event) => {
+    util.on(window, 'scroll', (event) => {
         if(this.routes[this.currentRouter] && this.routes[this.currentRouter].keepLive) {
             this.routes[this.currentRouter].scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
         }
@@ -104,11 +104,11 @@ export function setkeepLive() {
 //初始处理路由信息
 export function setPaths(routes) {
 
-    const fn = this.constructor.fn;
+    const util = this.constructor.util;
 
     this.alias = {};
 
-    fn.each(routes, (router, path) => {
+    util.each(routes, (router, path) => {
 
         const alias = router.alias;
 

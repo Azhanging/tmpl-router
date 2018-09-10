@@ -4,7 +4,7 @@
 
 export default function getTmpl(hash) {
 
-	const fn = this.constructor.fn;
+	const util = this.constructor.util;
 
 	const tmpl = this.constructor.tmpl;
 
@@ -33,7 +33,7 @@ export default function getTmpl(hash) {
 				}
 			});
 		} catch(e) {
-			fn.ajax({
+			util.ajax({
 				async: false,
 				url: tmplUrl,
 				success: function(data) {
@@ -59,11 +59,11 @@ export default function getTmpl(hash) {
 /*清空空的文本节点*/
 function filterTextNode(parentEl) {
 
-	const fn = this.constructor.fn;
+	const util = this.constructor.util;
 
 	const tmpl = this.constructor.tmpl;
 
-	fn.each(parentEl.childNodes, (el, index) => {
+	util.each(parentEl.childNodes, (el, index) => {
 		if(el && el.nodeType === 3 && el.textContent.trim() === '') {
 			tmpl.remove(el);
 		}

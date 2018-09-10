@@ -28,7 +28,7 @@ export default class TmplRouter {
 
 		this.tmpl = new Tmpl({});
 
-		this.fn = this.tmpl.fn;
+		this.util = this.tmpl.util;
 	}
 
 	init(opts) {
@@ -37,9 +37,9 @@ export default class TmplRouter {
 
 	/*设置路由路径*/
 	set(routerOpts) {
-		const fn = this.constructor.fn;
-		if(fn.isObj(routerOpts)) {
-			fn.each(routerOpts, (opt, key) => {
+		const util = this.constructor.util;
+		if(util.isObjcet(routerOpts)) {
+			util.each(routerOpts, (opt, key) => {
 				this.routes[key] = opt;
 			});
 		}
@@ -54,8 +54,8 @@ export default class TmplRouter {
 	}
 
 	go(page) {
-		const fn = this.constructor.fn;
-		if(fn.isNum(page)) history.go(page);
+		const util = this.constructor.util;
+		if(util.isNum(page)) history.go(page);
 	}
 
 	redirect(hash) {
@@ -76,11 +76,11 @@ export default class TmplRouter {
 
 	/*返回参数对象*/
 	query(searchs) {
-		const fn = this.constructor.fn;
-		if(!fn.isStr(searchs)) return {};
+		const util = this.constructor.util;
+		if(!util.isStr(searchs)) return {};
 		const query = {},
 			search = searchs.split('&');
-		fn.each(search, function(_search, index) {
+		util.each(search, function(_search, index) {
 			var temp = _search.split('=');
 			if(temp.length !== 1) {
 				var key = temp[0];
@@ -94,7 +94,7 @@ export default class TmplRouter {
 	/*获取|设置hash-url参数*/
 	search(el, search) {
 
-		const fn = this.constructor.fn,
+		const util = this.constructor.util,
 			tmpl = this.constructor.tmpl;
 
 		let path = '';
@@ -106,8 +106,8 @@ export default class TmplRouter {
 		}
 
 		if(search) {
-			if(fn.isObj(search)) {
-				search = fn.serialize(search);
+			if(util.isObjcet(search)) {
+				search = util.serialize(search);
 			}
 			path[1] = search;
 			tmpl.attr(el, {

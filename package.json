@@ -4,7 +4,7 @@
   "description": "tmpl，js模板",
   "main": "./dist/js/view.js",
   "scripts": {
-    "dv": "webpack-dev-server --hot",
+    "dev": "webpack-dev-server --hot",
     "start" : "webpack -w"
   },
   "contributors": [

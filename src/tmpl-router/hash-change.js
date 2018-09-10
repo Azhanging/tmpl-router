@@ -4,7 +4,7 @@
 
 export default function protoHashChange() {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         path = window.location.hash.replace('#', ''),
         routerBtns = tmpl.getEls(this.config.routerLink), //获取路由绑定的节点
@@ -27,15 +27,15 @@ export default function protoHashChange() {
 
     //error页面
     if(!this.alias[hash] && !this.routes[hash]) {
-        fn.run(this.config.error, this);
+        util.run(this.config.error, this);
         return;
     }
 
     //使用路由中的钩子
-    fn.run(this.routes[hash].routerEnter, this, [path, this.$from]);
+    util.run(this.routes[hash].routerEnter, this, [path, this.$from]);
 
     /*路由进入的全局钩子*/
-    fn.run(this.config.routerEnter, this, [path, this.$from]);
+    util.run(this.config.routerEnter, this, [path, this.$from]);
 
     /*如果是存在别名路径，返回代理的那个路径*/
     hashChange.apply(this, [routerBtns, (hasAlias ? hash : path), path]);
@@ -44,7 +44,7 @@ export default function protoHashChange() {
 /*hashChange的处理*/
 function hashChange(routerBtns, path, fullPath) {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         hash = this.getHash(path),
         lastRouter = this.$lastRouter;
@@ -68,7 +68,7 @@ function hashChange(routerBtns, path, fullPath) {
     showTmplEl.apply(this, [hash]); //显示路由的view
 
     //修改对应的状态
-    fn.each(routerBtns, (el, index) => {
+    util.each(routerBtns, (el, index) => {
         const path = tmpl.attr(el, 'href'),
             href = this.getHash(path);
 
@@ -93,25 +93,25 @@ function hashChange(routerBtns, path, fullPath) {
     setRouterScroll.call(this, hash);
 
     //使用路由中的钩子
-    fn.run(this.routes[hash].routerEntered, this, [path, this.$from, alinkEl]);
+    util.run(this.routes[hash].routerEntered, this, [path, this.$from, alinkEl]);
 
     //调用全局进入结束钩子
-    fn.run(this.config.routerEntered, this, [path, this.$from, alinkEl]);
+    util.run(this.config.routerEntered, this, [path, this.$from, alinkEl]);
 }
 
 /*检查当前路径是否存在别名*/
 function getPathAlias(path, el) {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         hash = this.getHash(path),
         alias = this.alias[hash];
 
     //别名触发钩子
     /*if(this.routes[hash]) {
-        fn.run(this.routes[hash].routerEnter, this, [path]);
-        fn.run(this.config.routerEnter, this, [path, el]);
-        fn.run(this.routes[hash].routerEntered, this, [path]);
-        fn.run(this.config.routerEntered, this, [path, el]);
+        util.run(this.routes[hash].routerEnter, this, [path]);
+        util.run(this.config.routerEnter, this, [path, el]);
+        util.run(this.routes[hash].routerEntered, this, [path]);
+        util.run(this.config.routerEntered, this, [path, el]);
     }*/
 
     //如果别名存在别名，递归使用
@@ -124,9 +124,9 @@ function getPathAlias(path, el) {
 
 /*保存节点信息*/
 function hideTmplEl(hash) {
-    const fn = this.constructor.fn;
+    const util = this.constructor.util;
     /*如果不是匹配的路由视图，则不显示在路由视图中*/
-    fn.each(this.routes[hash].view, (el, index) => {
+    util.each(this.routes[hash].view, (el, index) => {
         this.routes[hash].temp.appendChild(el);
     });
     this.routes[hash].view = [];
@@ -135,7 +135,7 @@ function hideTmplEl(hash) {
 /*显示节点信息*/
 function showTmplEl(hash) {
 
-    const fn = this.constructor.fn,
+    const util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         view = this.routerView;
 
@@ -143,7 +143,7 @@ function showTmplEl(hash) {
     view.appendChild(this.routes[hash].temp);
 
     //保存view层节点
-    fn.each(tmpl.children(view), (el, index) => {
+    util.each(tmpl.children(view), (el, index) => {
         this.routes[hash].view.push(el);
     });
 }
@@ -160,8 +160,8 @@ function setRouterScroll(hash) {
 
 /*设置scrollTop*/
 function setScrollTop(num) {
-    const fn = this.constructor.fn;
-    if(!fn.isNum(num)) return 0;
+    const util = this.constructor.util;
+    if(!util.isNum(num)) return 0;
     try {
         document.body.scrollTop = parseFloat(num);
     } catch(e) {
